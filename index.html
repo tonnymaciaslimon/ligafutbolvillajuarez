@@ -18,6 +18,15 @@
                             accent: '#22c55e',
                             hover: '#16a34a'
                         }
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' }
+                        }
+                    },
+                    animation: {
+                        marquee: 'marquee 25s linear infinite',
                     }
                 }
             }
@@ -26,7 +35,7 @@
     <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-soccer-dark text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-soccer-dark text-slate-100 min-h-screen flex flex-col font-sans pb-28">
 
     <!-- Header / Navbar -->
     <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-50">
@@ -74,7 +83,6 @@
 
         <!-- ================= TAB: INICIO ================= -->
         <section id="tab-inicio" class="tab-content space-y-6">
-            <!-- Hero Banner -->
             <div class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-emerald-900 via-slate-900 to-slate-900 border border-emerald-500/20 p-6 md:p-10 shadow-2xl">
                 <div class="relative z-10 max-w-2xl">
                     <span class="bg-soccer-accent/20 text-soccer-accent text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-soccer-accent/30">Temporada Oficial</span>
@@ -94,9 +102,7 @@
                 </div>
             </div>
 
-            <!-- Grid Resumen -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Próximos Partidos / Destacados -->
                 <div class="lg:col-span-2 bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -104,20 +110,15 @@
                         </h2>
                         <button onclick="switchTab('jornadas')" class="text-xs text-soccer-accent hover:underline font-semibold">Ver calendario completo</button>
                     </div>
-                    <div id="home-proximos-list" class="space-y-3">
-                        <!-- Inyectado por JS -->
-                    </div>
+                    <div id="home-proximos-list" class="space-y-3"></div>
                 </div>
 
-                <!-- Líderes Relámpago -->
                 <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl flex flex-col justify-between">
                     <div>
                         <h2 class="text-lg font-bold text-white flex items-center gap-2 mb-4">
                             <i class="fa-solid fa-crown text-amber-400"></i> Líder de Goleo
                         </h2>
-                        <div id="home-lider-goleo" class="space-y-3">
-                            <!-- Inyectado por JS -->
-                        </div>
+                        <div id="home-lider-goleo" class="space-y-3"></div>
                     </div>
                     <div class="mt-6 pt-4 border-t border-slate-800">
                         <button onclick="switchTab('goleadores')" class="w-full text-center text-xs font-bold text-soccer-accent hover:underline">Ver tabla completa de goleo &rarr;</button>
@@ -128,15 +129,12 @@
 
         <!-- ================= TAB: POSICIONES ================= -->
         <section id="tab-posiciones" class="tab-content hidden space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl font-black text-white flex items-center gap-2">
-                        <i class="fa-solid fa-table-list text-soccer-accent"></i> Tabla General de Posiciones
-                    </h1>
-                    <p class="text-slate-400 text-sm">Actualizada automáticamente según los resultados registrados.</p>
-                </div>
+            <div>
+                <h1 class="text-2xl font-black text-white flex items-center gap-2">
+                    <i class="fa-solid fa-table-list text-soccer-accent"></i> Tabla General de Posiciones
+                </h1>
+                <p class="text-slate-400 text-sm">Actualizada automáticamente según los resultados registrados.</p>
             </div>
-
             <div class="bg-soccer-card rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
@@ -154,9 +152,7 @@
                                 <th class="py-3 px-4 font-bold text-center text-soccer-accent">Pts</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-posiciones-body" class="divide-y divide-slate-800/60 text-sm">
-                            <!-- Inyectado por JS -->
-                        </tbody>
+                        <tbody id="tabla-posiciones-body" class="divide-y divide-slate-800/60 text-sm"></tbody>
                     </table>
                 </div>
             </div>
@@ -171,16 +167,9 @@
                     </h1>
                     <p class="text-slate-400 text-sm">Selecciona la jornada para consultar partidos y marcadores.</p>
                 </div>
-                <!-- Selector de Jornada -->
-                <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0" id="jornada-tabs-container">
-                    <!-- Inyectado por JS -->
-                </div>
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0" id="jornada-tabs-container"></div>
             </div>
-
-            <!-- Contenedor de Partidos de la Jornada -->
-            <div id="partidos-jornada-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Inyectado por JS -->
-            </div>
+            <div id="partidos-jornada-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </section>
 
         <!-- ================= TAB: GOLEADORES ================= -->
@@ -191,7 +180,6 @@
                 </h1>
                 <p class="text-slate-400 text-sm">Máximos anotadores del torneo.</p>
             </div>
-
             <div class="bg-soccer-card rounded-2xl border border-slate-800 overflow-hidden shadow-xl max-w-3xl mx-auto">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
@@ -203,9 +191,7 @@
                                 <th class="py-3 px-4 font-bold text-center text-soccer-accent">Goles</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-goleadores-body" class="divide-y divide-slate-800/60 text-sm">
-                            <!-- Inyectado por JS -->
-                        </tbody>
+                        <tbody id="tabla-goleadores-body" class="divide-y divide-slate-800/60 text-sm"></tbody>
                     </table>
                 </div>
             </div>
@@ -219,10 +205,7 @@
                 </h1>
                 <p class="text-slate-400 text-sm">Directorio oficial de clubes del torneo.</p>
             </div>
-
-            <div id="equipos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Inyectado por JS -->
-            </div>
+            <div id="equipos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
         <!-- ================= TAB: ADMIN ================= -->
@@ -231,12 +214,11 @@
                 <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xl"></i>
                 <div>
                     <h2 class="text-amber-300 font-bold text-sm">Panel de Administración Local</h2>
-                    <p class="text-slate-300 text-xs">Los cambios se guardan automáticamente en tu navegador (LocalStorage) para que puedas reflejarlos en tu página de GitHub.</p>
+                    <p class="text-slate-300 text-xs">Los cambios se guardan automáticamente en tu navegador (LocalStorage) para tu sitio en GitHub Pages.</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Col 1: Agregar Equipo -->
                 <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
                     <h3 class="font-bold text-white text-base flex items-center gap-2">
                         <i class="fa-solid fa-plus text-soccer-accent"></i> Agregar Equipo
@@ -254,7 +236,6 @@
                     </form>
                 </div>
 
-                <!-- Col 2: Registrar Resultado -->
                 <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
                     <h3 class="font-bold text-white text-base flex items-center gap-2">
                         <i class="fa-solid fa-pen-to-square text-soccer-accent"></i> Registrar / Editar Marcador
@@ -262,17 +243,15 @@
                     <form id="form-registrar-partido" onsubmit="actualizarMarcador(event)" class="space-y-3">
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1">Seleccionar Partido</label>
-                            <select id="admin-partido-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent">
-                                <!-- Inyectado por JS -->
-                            </select>
+                            <select id="admin-partido-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent"></select>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label id="admin-label-eq1" class="block text-xs font-semibold text-slate-400 mb-1 truncate">Local</label>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Local</label>
                                 <input type="number" id="admin-goles-eq1" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white text-center font-bold focus:outline-none focus:border-soccer-accent" placeholder="0">
                             </div>
                             <div>
-                                <label id="admin-label-eq2" class="block text-xs font-semibold text-slate-400 mb-1 truncate">Visitante</label>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Visitante</label>
                                 <input type="number" id="admin-goles-eq2" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white text-center font-bold focus:outline-none focus:border-soccer-accent" placeholder="0">
                             </div>
                         </div>
@@ -280,7 +259,6 @@
                     </form>
                 </div>
 
-                <!-- Col 3: Agregar Goleador -->
                 <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
                     <h3 class="font-bold text-white text-base flex items-center gap-2">
                         <i class="fa-solid fa-user-plus text-soccer-accent"></i> Registrar Goleador
@@ -292,9 +270,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1">Equipo</label>
-                            <select id="admin-gol-equipo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent">
-                                <!-- Inyectado por JS -->
-                            </select>
+                            <select id="admin-gol-equipo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent"></select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1">Goles</label>
@@ -305,7 +281,6 @@
                 </div>
             </div>
 
-            <!-- Botón Resetear Datos -->
             <div class="pt-4 text-center">
                 <button onclick="resetearDatosDefault()" class="text-xs text-rose-400 hover:text-rose-300 underline font-semibold">Restaurar datos iniciales de fábrica</button>
             </div>
@@ -313,9 +288,61 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-6 mt-12 text-center text-xs text-slate-500">
-        <p>Sistema Oficial de Gestión de Torneo de Fútbol • Creado para GitHub Pages</p>
+    <!-- ================= VALLA PUBLICITARIA FIJA (PATROCINADORES) ================= -->
+    <footer class="fixed bottom-0 left-0 right-0 z-40 bg-slate-950 border-t-2 border-soccer-accent shadow-[0_-10px_25px_rgba(0,0,0,0.8)] overflow-hidden">
+        <div class="bg-soccer-accent/10 py-1 px-4 text-center border-b border-soccer-accent/20 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+            <span class="text-[11px] font-extrabold tracking-widest text-soccer-accent uppercase">Patrocinadores Oficiales del Torneo</span>
+            <i class="fa-solid fa-star text-amber-400 text-xs"></i>
+        </div>
+        <!-- Contenedor con animación de marquesina continua -->
+        <div class="flex overflow-x-hidden py-3 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
+            <div class="flex animate-marquee whitespace-nowrap items-center space-x-12 px-6">
+                <!-- Bloque de Patrocinadores (Se repite para el efecto infinito fluido) -->
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-shirt text-soccer-accent"></i>
+                    <span>TJ Diseño y Publicidad</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-utensils text-amber-400"></i>
+                    <span>Taquería Los Amigos</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-store text-emerald-400"></i>
+                    <span>MiniSúper El Ahorro</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-wrench text-sky-400"></i>
+                    <span>Taller Mecánico Rápido</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-burger text-rose-400"></i>
+                    <span>Hamburguesas Don Pepe</span>
+                </div>
+
+                <!-- Duplicado exacto para mantener la fluidez de la animación -->
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-shirt text-soccer-accent"></i>
+                    <span>TJ Diseño y Publicidad</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-utensils text-amber-400"></i>
+                    <span>Taquería Los Amigos</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-store text-emerald-400"></i>
+                    <span>MiniSúper El Ahorro</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-wrench text-sky-400"></i>
+                    <span>Taller Mecánico Rápido</span>
+                </div>
+                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
+                    <i class="fa-solid fa-burger text-rose-400"></i>
+                    <span>Hamburguesas Don Pepe</span>
+                </div>
+            </div>
+        </div>
     </footer>
 
     <!-- JavaScript Principal -->
@@ -614,6 +641,7 @@
         function actualizarMarcador(e) {
             e.preventDefault();
             const partidoId = parseInt(document.getElementById('admin-partido-select').value);
+            0
             const g1 = parseInt(document.getElementById('admin-goles-eq1').value);
             const g2 = parseInt(document.getElementById('admin-goles-eq2').value);
 
