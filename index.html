@@ -26,7 +26,7 @@
                         }
                     },
                     animation: {
-                        marquee: 'marquee 25s linear infinite',
+                        marquee: 'marquee 30s linear infinite',
                     }
                 }
             }
@@ -209,7 +209,7 @@
         </section>
 
         <!-- ================= TAB: ADMIN ================= -->
-        <section id="tab-admin" class="tab-content hidden space-y-6">
+        <section id="tab-admin" class="tab-content hidden space-y-8">
             <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center gap-3">
                 <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xl"></i>
                 <div>
@@ -218,7 +218,44 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Gestión de Patrocinadores -->
+                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-5 lg:col-span-2">
+                    <h3 class="font-bold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-3">
+                        <i class="fa-solid fa-rectangle-ad text-soccer-accent"></i> Gestión de Patrocinadores (Valla Publicitaria)
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Formulario para Agregar Patrocinador -->
+                        <form id="form-agregar-patrocinador" onsubmit="agregarPatrocinador(event)" class="space-y-3 lg:col-span-1 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-semibold text-white text-sm mb-2"><i class="fa-solid fa-plus text-soccer-accent mr-1"></i> Añadir Nuevo Patrocinador</h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre del Patrocinador</label>
+                                <input type="text" id="admin-pat-nombre" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="Ej. TJ Diseño y Publicidad">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">URL del Logotipo / Banner</label>
+                                <input type="url" id="admin-pat-logo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="https://ejemplo.com/logo.png">
+                            </div>
+                            <!-- Guía de Medidas Exactas -->
+                            <div class="bg-sky-500/10 border border-sky-500/30 p-3 rounded-lg">
+                                <p class="text-[11px] text-sky-300 font-bold mb-0.5"><i class="fa-solid fa-circle-info mr-1"></i> Medida exacta recomendada:</p>
+                                <p class="text-[11px] text-slate-300 leading-relaxed">
+                                    Altura exacta: <strong class="text-white">60 a 80 pixeles</strong> (Ancho libre en proporción horizontal 3:1 o 4:1). Formatos PNG con fondo transparente o banner rectangular para evitar deformaciones.
+                                </p>
+                            </div>
+                            <button type="submit" class="w-full bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Guardar Patrocinador</button>
+                        </form>
+
+                        <!-- Lista de Patrocinadores Actuales con opción de Eliminar -->
+                        <div class="lg:col-span-2 space-y-3">
+                            <h4 class="font-semibold text-white text-sm">Patrocinadores Activos en la Valla</h4>
+                            <div id="admin-patrocinadores-lista" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agregar Equipo -->
                 <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
                     <h3 class="font-bold text-white text-base flex items-center gap-2">
                         <i class="fa-solid fa-plus text-soccer-accent"></i> Agregar Equipo
@@ -236,6 +273,7 @@
                     </form>
                 </div>
 
+                <!-- Registrar / Editar Marcador -->
                 <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
                     <h3 class="font-bold text-white text-base flex items-center gap-2">
                         <i class="fa-solid fa-pen-to-square text-soccer-accent"></i> Registrar / Editar Marcador
@@ -259,11 +297,12 @@
                     </form>
                 </div>
 
-                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
+                <!-- Registrar Goleador -->
+                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4 lg:col-span-2">
                     <h3 class="font-bold text-white text-base flex items-center gap-2">
                         <i class="fa-solid fa-user-plus text-soccer-accent"></i> Registrar Goleador
                     </h3>
-                    <form id="form-agregar-goleador" onsubmit="agregarGoleador(event)" class="space-y-3">
+                    <form id="form-agregar-goleador" onsubmit="agregarGoleador(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre del Jugador</label>
                             <input type="text" id="admin-gol-nombre" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="Ej. Carlos Pérez">
@@ -276,7 +315,9 @@
                             <label class="block text-xs font-semibold text-slate-400 mb-1">Goles</label>
                             <input type="number" id="admin-gol-goles" min="1" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white text-center font-bold focus:outline-none focus:border-soccer-accent" placeholder="1">
                         </div>
-                        <button type="submit" class="w-full bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Añadir / Actualizar Goles</button>
+                        <div class="sm:col-span-3">
+                            <button type="submit" class="w-full bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Añadir / Actualizar Goles</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -288,7 +329,7 @@
 
     </main>
 
-    <!-- ================= VALLA PUBLICITARIA FIJA (PATROCINADORES) ================= -->
+    <!-- ================= VALLA PUBLICITARIA FIJA (PATROCINADORES DINÁMICOS) ================= -->
     <footer class="fixed bottom-0 left-0 right-0 z-40 bg-slate-950 border-t-2 border-soccer-accent shadow-[0_-10px_25px_rgba(0,0,0,0.8)] overflow-hidden">
         <div class="bg-soccer-accent/10 py-1 px-4 text-center border-b border-soccer-accent/20 flex items-center justify-center gap-2">
             <i class="fa-solid fa-star text-amber-400 text-xs"></i>
@@ -296,51 +337,9 @@
             <i class="fa-solid fa-star text-amber-400 text-xs"></i>
         </div>
         <!-- Contenedor con animación de marquesina continua -->
-        <div class="flex overflow-x-hidden py-3 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
-            <div class="flex animate-marquee whitespace-nowrap items-center space-x-12 px-6">
-                <!-- Bloque de Patrocinadores (Se repite para el efecto infinito fluido) -->
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-shirt text-soccer-accent"></i>
-                    <span>TJ Diseño y Publicidad</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-utensils text-amber-400"></i>
-                    <span>Taquería Los Amigos</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-store text-emerald-400"></i>
-                    <span>MiniSúper El Ahorro</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-wrench text-sky-400"></i>
-                    <span>Taller Mecánico Rápido</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-burger text-rose-400"></i>
-                    <span>Hamburguesas Don Pepe</span>
-                </div>
-
-                <!-- Duplicado exacto para mantener la fluidez de la animación -->
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-shirt text-soccer-accent"></i>
-                    <span>TJ Diseño y Publicidad</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-utensils text-amber-400"></i>
-                    <span>Taquería Los Amigos</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-store text-emerald-400"></i>
-                    <span>MiniSúper El Ahorro</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-wrench text-sky-400"></i>
-                    <span>Taller Mecánico Rápido</span>
-                </div>
-                <div class="flex items-center space-x-2 text-slate-300 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-700/60 shadow-inner">
-                    <i class="fa-solid fa-burger text-rose-400"></i>
-                    <span>Hamburguesas Don Pepe</span>
-                </div>
+        <div class="flex overflow-x-hidden py-2 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
+            <div id="valla-marquee-track" class="flex animate-marquee whitespace-nowrap items-center space-x-12 px-6">
+                <!-- Se llena dinámicamente mediante JS -->
             </div>
         </div>
     </footer>
@@ -375,9 +374,18 @@
             { id: 4, nombre: "Alejandro Limón", equipo: "FC Culiacán", goles: 2 }
         ];
 
+        const defaultPatrocinadores = [
+            { id: 1, nombre: "TJ Diseño y Publicidad", logo: "" },
+            { id: 2, nombre: "Taquería Los Amigos", logo: "" },
+            { id: 3, nombre: "MiniSúper El Ahorro", logo: "" },
+            { id: 4, nombre: "Taller Mecánico Rápido", logo: "" },
+            { id: 5, nombre: "Hamburguesas Don Pepe", logo: "" }
+        ];
+
         let equipos = JSON.parse(localStorage.getItem('torneo_equipos')) || defaultEquipos;
         let partidos = JSON.parse(localStorage.getItem('torneo_partidos')) || defaultPartidos;
         let goleadores = JSON.parse(localStorage.getItem('torneo_goleadores')) || defaultGoleadores;
+        let patrocinadores = JSON.parse(localStorage.getItem('torneo_patrocinadores')) || defaultPatrocinadores;
 
         let currentJornadaActive = 1;
 
@@ -385,6 +393,7 @@
             localStorage.setItem('torneo_equipos', JSON.stringify(equipos));
             localStorage.setItem('torneo_partidos', JSON.stringify(partidos));
             localStorage.setItem('torneo_goleadores', JSON.stringify(goleadores));
+            localStorage.setItem('torneo_patrocinadores', JSON.stringify(patrocinadores));
         }
 
         function switchTab(tabId) {
@@ -416,6 +425,90 @@
             renderGoleadores();
             renderEquipos();
             renderAdminSelects();
+            renderPatrocinadoresValla();
+            renderAdminPatrocinadoresList();
+        }
+
+        function renderPatrocinadoresValla() {
+            const track = document.getElementById('valla-marquee-track');
+            if (!track) return;
+
+            if (patrocinadores.length === 0) {
+                track.innerHTML = `<div class="text-slate-400 text-sm px-4">Sin patrocinadores registrados. Añádelos en la sección Admin.</div>`;
+                return;
+            }
+
+            const generarItemsHTML = () => {
+                return patrocinadores.map(p => {
+                    if (p.logo && p.logo.trim() !== '') {
+                        return `
+                            <div class="flex items-center justify-center bg-slate-900/80 px-4 py-1.5 rounded-xl border border-slate-700/60 shadow-inner h-14">
+                                <img src="${p.logo}" alt="${p.nombre}" class="max-h-10 w-auto object-contain" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fa-solid fa-star text-soccer-accent mr-2\'></i><span class=\'text-slate-200 font-bold text-sm\'>${p.nombre}</span>';">
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="flex items-center space-x-2 text-slate-200 font-bold tracking-wider text-sm bg-slate-900/80 px-4 py-2.5 rounded-xl border border-slate-700/60 shadow-inner">
+                                <i class="fa-solid fa-rectangle-ad text-soccer-accent"></i>
+                                <span>${p.nombre}</span>
+                            </div>
+                        `;
+                    }
+                }).join('');
+            };
+
+            // Duplicamos el contenido para el loop infinito perfecto
+            track.innerHTML = generarItemsHTML() + generarItemsHTML();
+        }
+
+        function renderAdminPatrocinadoresList() {
+            const listaDiv = document.getElementById('admin-patrocinadores-lista');
+            if(!listaDiv) return;
+
+            if(patrocinadores.length === 0) {
+                listaDiv.innerHTML = `<p class="text-slate-400 text-xs italic">No hay patrocinadores creados.</p>`;
+                return;
+            }
+
+            listaDiv.innerHTML = patrocinadores.map(p => `
+                <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between gap-3 text-sm">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-12 h-10 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-center flex-shrink-0 p-1">
+                            ${p.logo ? `<img src="${p.logo}" class="max-h-full max-w-full object-contain" alt="">` : `<i class="fa-solid fa-image text-slate-600 text-xs"></i>`}
+                        </div>
+                        <div class="truncate">
+                            <h5 class="font-bold text-white text-xs truncate">${p.nombre}</h5>
+                            <p class="text-[10px] text-slate-400 truncate">${p.logo ? p.logo : 'Solo texto (Sin banner)'}</p>
+                        </div>
+                    </div>
+                    <button onclick="eliminarPatrocinador(${p.id})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 p-2 rounded-lg transition text-xs flex-shrink-0" title="Eliminar patrocinador">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function agregarPatrocinador(e) {
+            e.preventDefault();
+            const nombre = document.getElementById('admin-pat-nombre').value.trim();
+            const logo = document.getElementById('admin-pat-logo').value.trim();
+
+            if(!nombre) return;
+
+            const nuevoId = patrocinadores.length > 0 ? Math.max(...patrocinadores.map(p => p.id)) + 1 : 1;
+            patrocinadores.push({ id: nuevoId, nombre, logo });
+            guardarDatos();
+            renderApp();
+            document.getElementById('form-agregar-patrocinador').reset();
+            alert('¡Patrocinador agregado con éxito!');
+        }
+
+        function eliminarPatrocinador(id) {
+            if(confirm('¿Estás seguro de eliminar este patrocinador de la valla publicitaria?')) {
+                patrocinadores = patrocinadores.filter(p => p.id !== id);
+                guardarDatos();
+                renderApp();
+            }
         }
 
         function renderInicio() {
@@ -641,7 +734,6 @@
         function actualizarMarcador(e) {
             e.preventDefault();
             const partidoId = parseInt(document.getElementById('admin-partido-select').value);
-            0
             const g1 = parseInt(document.getElementById('admin-goles-eq1').value);
             const g2 = parseInt(document.getElementById('admin-goles-eq2').value);
 
@@ -683,6 +775,7 @@
                 equipos = [...defaultEquipos];
                 partidos = [...defaultPartidos];
                 goleadores = [...defaultGoleadores];
+                patrocinadores = [...defaultPatrocinadores];
                 guardarDatos();
                 renderApp();
                 alert('Datos restablecidos correctamente.');
