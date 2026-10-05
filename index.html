@@ -57,7 +57,7 @@
                     <button onclick="switchTab('jornadas')" id="btn-jornadas" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">Jornadas</button>
                     <button onclick="switchTab('goleadores')" id="btn-goleadores" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">Goleadores</button>
                     <button onclick="switchTab('equipos')" id="btn-equipos" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800 hover:text-white">Equipos</button>
-                    <button onclick="switchTab('admin')" id="btn-admin" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition text-amber-400 hover:bg-slate-800"><i class="fa-solid fa-gear mr-1"></i> Admin</button>
+                    <button onclick="switchTab('admin')" id="btn-admin" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium transition text-amber-400 hover:bg-slate-800"><i class="fa-solid fa-shield-dog mr-1"></i> Admin</button>
                 </nav>
                 <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center">
@@ -208,100 +208,143 @@
             <div id="equipos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- ================= TAB: ADMIN ================= -->
+        <!-- ================= TAB: ADMIN (PROTEGIDO POR PIN) ================= -->
         <section id="tab-admin" class="tab-content hidden space-y-8">
-            <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center gap-3">
-                <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xl"></i>
-                <div>
-                    <h2 class="text-amber-300 font-bold text-sm">Panel de Administración Local</h2>
-                    <p class="text-slate-300 text-xs">Los cambios se guardan automáticamente en tu navegador (LocalStorage) para tu sitio en GitHub Pages.</p>
+            
+            <!-- Pantalla de Login / Ingreso de PIN -->
+            <div id="admin-login-container" class="max-w-md mx-auto bg-soccer-card rounded-2xl border border-slate-800 p-8 shadow-2xl text-center space-y-6 my-12">
+                <div class="w-16 h-16 bg-amber-400/10 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-amber-400/20">
+                    <i class="fa-solid fa-lock"></i>
                 </div>
+                <div>
+                    <h2 class="text-xl font-black text-white">Acceso de Administrador</h2>
+                    <p class="text-xs text-slate-400 mt-1">Ingresa el PIN de seguridad para gestionar el torneo.</p>
+                </div>
+                <form onsubmit="verificarPinAdmin(event)" class="space-y-4">
+                    <div>
+                        <input type="password" id="admin-pin-input" required maxlength="6" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-center text-xl font-bold tracking-widest text-white focus:outline-none focus:border-amber-400" placeholder="••••">
+                    </div>
+                    <button type="submit" class="w-full bg-amber-400 text-slate-950 font-bold py-3 rounded-xl hover:bg-amber-300 transition text-sm">Ingresar al Panel</button>
+                </form>
+                <div class="text-[11px] text-slate-500">PIN predeterminado de prueba: <strong class="text-slate-400">1234</strong></div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Gestión de Patrocinadores -->
-                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-5 lg:col-span-2">
-                    <h3 class="font-bold text-white text-base flex items-center gap-2 border-b border-slate-800 pb-3">
-                        <i class="fa-solid fa-rectangle-ad text-soccer-accent"></i> Gestión de Patrocinadores (Valla Publicitaria)
-                    </h3>
-                    
+            <!-- Panel de Administración (Oculto hasta autenticarse) -->
+            <div id="admin-panel-content" class="hidden space-y-8">
+                <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-400 text-xl"></i>
+                        <div>
+                            <h2 class="text-amber-300 font-bold text-sm">Modo Administrador Activo</h2>
+                            <p class="text-slate-300 text-xs">Los cambios se guardan automáticamente en tu navegador (LocalStorage).</p>
+                        </div>
+                    </div>
+                    <button onclick="cerrarSesionAdmin()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-4 py-2 rounded-xl transition border border-slate-700">Cerrar Sesión</button>
+                </div>
+
+                <!-- SECCIÓN 1: GESTIÓN DE EQUIPOS Y LOGOTIPOS -->
+                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-5">
+                    <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-soccer-accent"></i> 1. Gestión de Equipos y Escudos
+                        </h3>
+                    </div>
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Formulario para Agregar Patrocinador -->
-                        <form id="form-agregar-patrocinador" onsubmit="agregarPatrocinador(event)" class="space-y-3 lg:col-span-1 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
-                            <h4 class="font-semibold text-white text-sm mb-2"><i class="fa-solid fa-plus text-soccer-accent mr-1"></i> Añadir Nuevo Patrocinador</h4>
+                        <!-- Formulario para Agregar/Modificar Equipo -->
+                        <form id="form-equipo" onsubmit="guardarEquipoAdmin(event)" class="space-y-3 lg:col-span-1 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                            <input type="hidden" id="admin-eq-edit-id" value="">
+                            <h4 id="admin-eq-form-title" class="font-semibold text-white text-sm mb-2"><i class="fa-solid fa-plus text-soccer-accent mr-1"></i> Registrar Nuevo Equipo</h4>
                             <div>
-                                <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre del Patrocinador</label>
-                                <input type="text" id="admin-pat-nombre" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="Ej. TJ Diseño y Publicidad">
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre del Equipo</label>
+                                <input type="text" id="admin-eq-nombre" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="Ej. Deportivo Villa">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">URL del Logotipo / Escudo</label>
+                                <input type="url" id="admin-eq-escudo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="https://ejemplo.com/escudo.png">
+                            </div>
+                            <div class="bg-sky-500/10 border border-sky-500/30 p-2.5 rounded-lg">
+                                <p class="text-[11px] text-sky-300 font-bold mb-0.5"><i class="fa-solid fa-circle-info mr-1"></i> Medida sugerida:</p>
+                                <p class="text-[11px] text-slate-300">Imagen cuadrada (Ej. 200x200 px) en formato PNG con fondo transparente.</p>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <button type="submit" id="admin-eq-btn-submit" class="flex-1 bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Guardar Equipo</button>
+                                <button type="button" id="admin-eq-btn-cancel" onclick="cancelarEdicionEquipo()" class="hidden bg-slate-800 text-slate-300 px-3 py-2.5 rounded-xl hover:bg-slate-700 transition text-sm">Cancelar</button>
+                            </div>
+                        </form>
+                        <!-- Listado de Equipos Existentes para Editar/Eliminar -->
+                        <div class="lg:col-span-2 space-y-3">
+                            <h4 class="font-semibold text-white text-sm">Equipos Registrados</h4>
+                            <div id="admin-equipos-lista" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN 2: COLOCAR Y EDITAR RESULTADOS -->
+                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-5">
+                    <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-futbol text-soccer-accent"></i> 2. Colocar y Modificar Resultados de Partidos
+                        </h3>
+                    </div>
+                    <form id="form-registrar-partido" onsubmit="actualizarMarcador(event)" class="space-y-4 max-w-xl">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">Seleccionar Partido</label>
+                            <select id="admin-partido-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent"></select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Goles Local</label>
+                                <input type="number" id="admin-goles-eq1" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white text-center font-bold focus:outline-none focus:border-soccer-accent" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Goles Visitante</label>
+                                <input type="number" id="admin-goles-eq2" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white text-center font-bold focus:outline-none focus:border-soccer-accent" placeholder="0">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Guardar Resultado</button>
+                    </form>
+                </div>
+
+                <!-- SECCIÓN 3: GESTIÓN DE PATROCINADORES -->
+                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-5">
+                    <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-rectangle-ad text-soccer-accent"></i> 3. Modificar Patrocinadores (Valla Publicitaria)
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Formulario Patrocinador -->
+                        <form id="form-agregar-patrocinador" onsubmit="agregarPatrocinador(event)" class="space-y-3 lg:col-span-1 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-semibold text-white text-sm mb-2"><i class="fa-solid fa-plus text-soccer-accent mr-1"></i> Añadir Patrocinador</h4>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre</label>
+                                <input type="text" id="admin-pat-nombre" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="Ej. Negocio Local">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-400 mb-1">URL del Logotipo / Banner</label>
-                                <input type="url" id="admin-pat-logo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="https://ejemplo.com/logo.png">
+                                <input type="url" id="admin-pat-logo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="https://...">
                             </div>
-                            <!-- Guía de Medidas Exactas -->
-                            <div class="bg-sky-500/10 border border-sky-500/30 p-3 rounded-lg">
+                            <div class="bg-sky-500/10 border border-sky-500/30 p-2.5 rounded-lg">
                                 <p class="text-[11px] text-sky-300 font-bold mb-0.5"><i class="fa-solid fa-circle-info mr-1"></i> Medida exacta recomendada:</p>
-                                <p class="text-[11px] text-slate-300 leading-relaxed">
-                                    Altura exacta: <strong class="text-white">60 a 80 pixeles</strong> (Ancho libre en proporción horizontal 3:1 o 4:1). Formatos PNG con fondo transparente o banner rectangular para evitar deformaciones.
-                                </p>
+                                <p class="text-[11px] text-slate-300">Altura exacta: <strong class="text-white">60 a 80 px</strong> (Proporción horizontal 3:1 o 4:1).</p>
                             </div>
                             <button type="submit" class="w-full bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Guardar Patrocinador</button>
                         </form>
-
-                        <!-- Lista de Patrocinadores Actuales con opción de Eliminar -->
+                        <!-- Lista Patrocinadores -->
                         <div class="lg:col-span-2 space-y-3">
-                            <h4 class="font-semibold text-white text-sm">Patrocinadores Activos en la Valla</h4>
+                            <h4 class="font-semibold text-white text-sm">Patrocinadores Activos</h4>
                             <div id="admin-patrocinadores-lista" class="space-y-2 max-h-72 overflow-y-auto pr-1"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Agregar Equipo -->
-                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
-                    <h3 class="font-bold text-white text-base flex items-center gap-2">
-                        <i class="fa-solid fa-plus text-soccer-accent"></i> Agregar Equipo
-                    </h3>
-                    <form id="form-agregar-equipo" onsubmit="agregarEquipo(event)" class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre del Equipo</label>
-                            <input type="text" id="admin-eq-nombre" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="Ej. Deportivo Villa">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">URL Escudo (Opcional)</label>
-                            <input type="url" id="admin-eq-escudo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent" placeholder="https://...">
-                        </div>
-                        <button type="submit" class="w-full bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Registrar Equipo</button>
-                    </form>
-                </div>
-
-                <!-- Registrar / Editar Marcador -->
-                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
-                    <h3 class="font-bold text-white text-base flex items-center gap-2">
-                        <i class="fa-solid fa-pen-to-square text-soccer-accent"></i> Registrar / Editar Marcador
-                    </h3>
-                    <form id="form-registrar-partido" onsubmit="actualizarMarcador(event)" class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-400 mb-1">Seleccionar Partido</label>
-                            <select id="admin-partido-select" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-soccer-accent"></select>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-400 mb-1">Local</label>
-                                <input type="number" id="admin-goles-eq1" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white text-center font-bold focus:outline-none focus:border-soccer-accent" placeholder="0">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-400 mb-1">Visitante</label>
-                                <input type="number" id="admin-goles-eq2" min="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white text-center font-bold focus:outline-none focus:border-soccer-accent" placeholder="0">
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full bg-soccer-accent text-slate-950 font-bold py-2.5 rounded-xl hover:bg-soccer-hover transition text-sm">Guardar Marcador</button>
-                    </form>
-                </div>
-
-                <!-- Registrar Goleador -->
-                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4 lg:col-span-2">
-                    <h3 class="font-bold text-white text-base flex items-center gap-2">
-                        <i class="fa-solid fa-user-plus text-soccer-accent"></i> Registrar Goleador
-                    </h3>
+                <!-- SECCIÓN 4: GOLEADORES -->
+                <div class="bg-soccer-card rounded-2xl border border-slate-800 p-6 shadow-xl space-y-5">
+                    <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-shoe-prints text-soccer-accent"></i> 4. Registrar Goleadores
+                        </h3>
+                    </div>
                     <form id="form-agregar-goleador" onsubmit="agregarGoleador(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 mb-1">Nombre del Jugador</label>
@@ -320,11 +363,12 @@
                         </div>
                     </form>
                 </div>
+
+                <div class="pt-4 text-center">
+                    <button onclick="resetearDatosDefault()" class="text-xs text-rose-400 hover:text-rose-300 underline font-semibold">Restaurar datos iniciales de fábrica</button>
+                </div>
             </div>
 
-            <div class="pt-4 text-center">
-                <button onclick="resetearDatosDefault()" class="text-xs text-rose-400 hover:text-rose-300 underline font-semibold">Restaurar datos iniciales de fábrica</button>
-            </div>
         </section>
 
     </main>
@@ -388,6 +432,7 @@
         let patrocinadores = JSON.parse(localStorage.getItem('torneo_patrocinadores')) || defaultPatrocinadores;
 
         let currentJornadaActive = 1;
+        const ADMIN_PIN = "1234"; // Puedes cambiar este PIN por el que gustes
 
         function guardarDatos() {
             localStorage.setItem('torneo_equipos', JSON.stringify(equipos));
@@ -418,6 +463,45 @@
             menu.classList.toggle('hidden');
         }
 
+        // Control de Sesión Admin
+        function verificarPinAdmin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('admin-pin-input').value.trim();
+            if(pin === ADMIN_PIN) {
+                localStorage.setItem('torneo_admin_auth', 'true');
+                document.getElementById('admin-login-container').classList.add('hidden');
+                document.getElementById('admin-panel-content').classList.remove('hidden');
+                renderAdminEquiposList();
+                renderAdminPatrocinadoresList();
+            } else {
+                alert('PIN incorrecto. Intenta de nuevo.');
+                document.getElementById('admin-pin-input').value = '';
+            }
+        }
+
+        function cerrarSesionAdmin() {
+            localStorage.removeItem('torneo_admin_auth');
+            document.getElementById('admin-panel-content').classList.add('hidden');
+            document.getElementById('admin-login-container').classList.remove('hidden');
+            document.getElementById('admin-pin-input').value = '';
+        }
+
+        function revisarAuthAdmin() {
+            const isAuth = localStorage.getItem('torneo_admin_auth') === 'true';
+            const loginBox = document.getElementById('admin-login-container');
+            const panelBox = document.getElementById('admin-panel-content');
+
+            if(loginBox && panelBox) {
+                if(isAuth) {
+                    loginBox.classList.add('hidden');
+                    panelBox.classList.remove('hidden');
+                } else {
+                    loginBox.classList.remove('hidden');
+                    panelBox.classList.add('hidden');
+                }
+            }
+        }
+
         function renderApp() {
             renderInicio();
             renderPosiciones();
@@ -426,7 +510,12 @@
             renderEquipos();
             renderAdminSelects();
             renderPatrocinadoresValla();
-            renderAdminPatrocinadoresList();
+            revisarAuthAdmin();
+            const isAuth = localStorage.getItem('torneo_admin_auth') === 'true';
+            if(isAuth) {
+                renderAdminEquiposList();
+                renderAdminPatrocinadoresList();
+            }
         }
 
         function renderPatrocinadoresValla() {
@@ -434,7 +523,7 @@
             if (!track) return;
 
             if (patrocinadores.length === 0) {
-                track.innerHTML = `<div class="text-slate-400 text-sm px-4">Sin patrocinadores registrados. Añádelos en la sección Admin.</div>`;
+                track.innerHTML = `<div class="text-slate-400 text-sm px-4">Sin patrocinadores registrados.</div>`;
                 return;
             }
 
@@ -457,10 +546,114 @@
                 }).join('');
             };
 
-            // Duplicamos el contenido para el loop infinito perfecto
             track.innerHTML = generarItemsHTML() + generarItemsHTML();
         }
 
+        // Gestión de Equipos en Admin
+        function renderAdminEquiposList() {
+            const listaDiv = document.getElementById('admin-equipos-lista');
+            if(!listaDiv) return;
+
+            if(equipos.length === 0) {
+                listaDiv.innerHTML = `<p class="text-slate-400 text-xs italic">No hay equipos registrados.</p>`;
+                return;
+            }
+
+            listaDiv.innerHTML = equipos.map(eq => `
+                <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl flex items-center justify-between gap-3 text-sm">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-10 h-10 bg-slate-950 rounded-lg border border-slate-800 flex items-center justify-center flex-shrink-0 p-1">
+                            <img src="${eq.escudo || 'https://cdn-icons-png.flaticon.com/512/53/53283.png'}" class="max-h-full max-w-full object-contain" alt="">
+                        </div>
+                        <div class="truncate">
+                            <h5 class="font-bold text-white text-xs truncate">${eq.nombre}</h5>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-shrink-0">
+                        <button onclick="editarEquipo(${eq.id})" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 p-2 rounded-lg transition text-xs" title="Modificar equipo">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="eliminarEquipo(${eq.id})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 p-2 rounded-lg transition text-xs" title="Eliminar equipo">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function guardarEquipoAdmin(e) {
+            e.preventDefault();
+            const editId = document.getElementById('admin-eq-edit-id').value;
+            const nombre = document.getElementById('admin-eq-nombre').value.trim();
+            const escudo = document.getElementById('admin-eq-escudo').value.trim();
+
+            if(!nombre) return;
+
+            if(editId) {
+                // Modificar equipo existente
+                const eq = equipos.find(item => item.id == editId);
+                if(eq) {
+                    const nombreAnterior = eq.nombre;
+                    eq.nombre = nombre;
+                    eq.escudo = escudo;
+
+                    // Actualizar nombre en partidos y goleadores si cambió
+                    if(nombreAnterior !== nombre) {
+                        partidos.forEach(p => {
+                            if(p.eq1 === nombreAnterior) p.eq1 = nombre;
+                            if(p.eq2 === nombreAnterior) p.eq2 = nombre;
+                        });
+                        goleadores.forEach(g => {
+                            if(g.equipo === nombreAnterior) g.equipo = nombre;
+                        });
+                    }
+                }
+                alert('¡Equipo modificado correctamente!');
+            } else {
+                // Crear nuevo equipo
+                const nuevoId = equipos.length > 0 ? Math.max(...equipos.map(eq => eq.id)) + 1 : 1;
+                equipos.push({ id: nuevoId, nombre, escudo });
+                alert('¡Equipo agregado con éxito!');
+            }
+
+            guardarDatos();
+            cancelarEdicionEquipo();
+            renderApp();
+        }
+
+        function editarEquipo(id) {
+            const eq = equipos.find(item => item.id === id);
+            if(!eq) return;
+
+            document.getElementById('admin-eq-edit-id').value = eq.id;
+            document.getElementById('admin-eq-nombre').value = eq.nombre;
+            document.getElementById('admin-eq-escudo').value = eq.escudo || '';
+            document.getElementById('admin-eq-form-title').innerHTML = `<i class="fa-solid fa-pen text-amber-400 mr-1"></i> Modificar Equipo`;
+            document.getElementById('admin-eq-btn-submit').textContent = 'Actualizar Equipo';
+            document.getElementById('admin-eq-btn-cancel').classList.remove('hidden');
+            document.getElementById('form-equipo').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function cancelarEdicionEquipo() {
+            document.getElementById('form-equipo').reset();
+            document.getElementById('admin-eq-edit-id').value = '';
+            document.getElementById('admin-eq-form-title').innerHTML = `<i class="fa-solid fa-plus text-soccer-accent mr-1"></i> Registrar Nuevo Equipo`;
+            document.getElementById('admin-eq-btn-submit').textContent = 'Guardar Equipo';
+            document.getElementById('admin-eq-btn-cancel').classList.add('hidden');
+        }
+
+        function eliminarEquipo(id) {
+            const eq = equipos.find(item => item.id === id);
+            if(!eq) return;
+
+            if(confirm(`¿Estás seguro de eliminar al equipo "${eq.nombre}"?`)) {
+                equipos = equipos.filter(item => item.id !== id);
+                guardarDatos();
+                renderApp();
+            }
+        }
+
+        // Gestión de Patrocinadores en Admin
         function renderAdminPatrocinadoresList() {
             const listaDiv = document.getElementById('admin-patrocinadores-lista');
             if(!listaDiv) return;
@@ -504,7 +697,7 @@
         }
 
         function eliminarPatrocinador(id) {
-            if(confirm('¿Estás seguro de eliminar este patrocinador de la valla publicitaria?')) {
+            if(confirm('¿Estás seguro de eliminar este patrocinador?')) {
                 patrocinadores = patrocinadores.filter(p => p.id !== id);
                 guardarDatos();
                 renderApp();
@@ -706,29 +899,18 @@
 
         function renderAdminSelects() {
             const partidoSelect = document.getElementById('admin-partido-select');
-            partidoSelect.innerHTML = partidos.map(p => `
-                <option value="${p.id}">Jornada ${p.jornada}: ${p.eq1} vs ${p.eq2} (${p.jugado ? 'Jugado: ' + p.goles1 + '-' + p.goles2 : 'Pendiente'})</option>
-            `).join('');
+            if(partidoSelect) {
+                partidoSelect.innerHTML = partidos.map(p => `
+                    <option value="${p.id}">Jornada ${p.jornada}: ${p.eq1} vs ${p.eq2} (${p.jugado ? 'Jugado: ' + p.goles1 + '-' + p.goles2 : 'Pendiente'})</option>
+                `).join('');
+            }
 
             const golEquipoSelect = document.getElementById('admin-gol-equipo');
-            golEquipoSelect.innerHTML = equipos.map(eq => `
-                <option value="${eq.nombre}">${eq.nombre}</option>
-            `).join('');
-        }
-
-        function agregarEquipo(e) {
-            e.preventDefault();
-            const nombre = document.getElementById('admin-eq-nombre').value.trim();
-            const escudo = document.getElementById('admin-eq-escudo').value.trim();
-
-            if(!nombre) return;
-
-            const nuevoId = equipos.length > 0 ? Math.max(...equipos.map(eq => eq.id)) + 1 : 1;
-            equipos.push({ id: nuevoId, nombre, escudo });
-            guardarDatos();
-            renderApp();
-            document.getElementById('form-agregar-equipo').reset();
-            alert('¡Equipo agregado con éxito!');
+            if(golEquipoSelect) {
+                golEquipoSelect.innerHTML = equipos.map(eq => `
+                    <option value="${eq.nombre}">${eq.nombre}</option>
+                `).join('');
+            }
         }
 
         function actualizarMarcador(e) {
